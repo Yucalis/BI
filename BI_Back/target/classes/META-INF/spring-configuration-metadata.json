@@ -1,0 +1,96 @@
+{
+  "groups": [
+    {
+      "name": "cos.client",
+      "type": "com.yupi.springbootinit.config.CosClientConfig",
+      "sourceType": "com.yupi.springbootinit.config.CosClientConfig"
+    },
+    {
+      "name": "spring.redisson",
+      "type": "com.yupi.springbootinit.config.RedissonConfig",
+      "sourceType": "com.yupi.springbootinit.config.RedissonConfig"
+    },
+    {
+      "name": "wx.open",
+      "type": "com.yupi.springbootinit.config.WxOpenConfig",
+      "sourceType": "com.yupi.springbootinit.config.WxOpenConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "cos.client.access-key",
+      "type": "java.lang.String",
+      "description": "accessKey",
+      "sourceType": "com.yupi.springbootinit.config.CosClientConfig"
+    },
+    {
+      "name": "cos.client.accessKey",
+      "type": "java.lang.String",
+      "description": "Description for cos.client.accessKey."
+    },
+    {
+      "name": "cos.client.bucket",
+      "type": "java.lang.String",
+      "description": "Description for cos.client.bucket.",
+      "sourceType": "com.yupi.springbootinit.config.CosClientConfig"
+    },
+    {
+      "name": "cos.client.region",
+      "type": "java.lang.String",
+      "description": "Description for cos.client.region.",
+      "sourceType": "com.yupi.springbootinit.config.CosClientConfig"
+    },
+    {
+      "name": "cos.client.secret-key",
+      "type": "java.lang.String",
+      "description": "secretKey",
+      "sourceType": "com.yupi.springbootinit.config.CosClientConfig"
+    },
+    {
+      "name": "cos.client.secretKey",
+      "type": "java.lang.String",
+      "description": "Description for cos.client.secretKey."
+    },
+    {
+      "name": "spring.redisson.data-base",
+      "type": "java.lang.Integer",
+      "sourceType": "com.yupi.springbootinit.config.RedissonConfig"
+    },
+    {
+      "name": "spring.redisson.host",
+      "type": "java.lang.String",
+      "sourceType": "com.yupi.springbootinit.config.RedissonConfig"
+    },
+    {
+      "name": "spring.redisson.port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.yupi.springbootinit.config.RedissonConfig"
+    },
+    {
+      "name": "wx.open.app-id",
+      "type": "java.lang.String",
+      "sourceType": "com.yupi.springbootinit.config.WxOpenConfig"
+    },
+    {
+      "name": "wx.open.app-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.yupi.springbootinit.config.WxOpenConfig"
+    },
+    {
+      "name": "wx.open.appId",
+      "type": "java.lang.String",
+      "description": "Description for wx.open.appId."
+    },
+    {
+      "name": "wx.open.appSecret",
+      "type": "java.lang.String",
+      "description": "Description for wx.open.appSecret."
+    },
+    {
+      "name": "wx.open.wx-mp-service",
+      "type": "me.chanjar.weixin.mp.api.WxMpService",
+      "sourceType": "com.yupi.springbootinit.config.WxOpenConfig"
+    }
+  ],
+  "hints": []
+}
