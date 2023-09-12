@@ -82,10 +82,11 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
         //拼接用户的请求
         StringBuilder userRequest = new StringBuilder();
         userRequest.append("分析需求：").append("\n");
-        if (StringUtils.isNotBlank(goal)) {
+        userRequest.append(goal);
+        if (StringUtils.isNotBlank(chartType)) {
             userRequest.append(",请使用").append(chartType);
         }
-        userRequest.append(goal).append("\n");
+        userRequest.append("\n");
         userRequest.append("原始数据：").append("\n").append(csvData);
 
         //模型id
@@ -109,6 +110,7 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
         chart.setUserId(loginUser.getId());
         chart.setGenChart(genChart);
         chart.setGenResult(genResult);
+        chart.setStatus("success");
         boolean saveResult = this.save(chart);
         ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图表保存失败");
 
