@@ -24,6 +24,9 @@
     </update>
 
 
+    <select id="selectAll" resultType="java.util.Map">
+        select * from ${tableName}
+    </select>
 
 
 </mapper>

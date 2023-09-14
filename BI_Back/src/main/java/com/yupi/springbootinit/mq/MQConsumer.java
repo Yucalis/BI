@@ -7,8 +7,10 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.yupi.springbootinit.common.ErrorCode;
 import com.yupi.springbootinit.exception.BusinessException;
 import com.yupi.springbootinit.manager.AIManager;
+import com.yupi.springbootinit.mapper.TableMapper;
 import com.yupi.springbootinit.model.entity.Chart;
 import com.yupi.springbootinit.service.ChartService;
+import com.yupi.springbootinit.utils.ExcelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 @Component
@@ -28,6 +32,9 @@ public class MQConsumer {
 
     @Resource
     private AIManager aiManager;
+
+    @Resource
+    private TableMapper tableMapper;
 
     private static long modelId = 1696869691743600641L;
 
@@ -77,6 +84,9 @@ public class MQConsumer {
                 throw new BusinessException(ErrorCode.OPERATION_ERROR, "图表状态更新失败");
             }
 
+            List<Map<String, String>> dataLists = tableMapper.selectAll(chart.getChartDate());
+            String csvData = ExcelUtils.excelMapToCsv(dataLists);
+            //拼接用户的请求
             StringBuilder userRequest = new StringBuilder();
             userRequest.append("分析需求：").append("\n");
             userRequest.append(chart.getGoal());
@@ -84,7 +94,9 @@ public class MQConsumer {
                 userRequest.append(",请使用").append(chart.getCharType());
             }
             userRequest.append("\n");
-            userRequest.append("原始数据：").append("\n").append(chart.getChartDate());
+            userRequest.append("原始数据：").append("\n").append(csvData);
+
+
             String result = aiManager.doChart(modelId, userRequest.toString());
             String[] splits = result.split("【【【【【");
             if (splits.length < 3) {

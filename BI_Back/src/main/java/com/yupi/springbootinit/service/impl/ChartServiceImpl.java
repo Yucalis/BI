@@ -10,6 +10,7 @@ import com.yupi.springbootinit.exception.BusinessException;
 import com.yupi.springbootinit.exception.ThrowUtils;
 import com.yupi.springbootinit.manager.AIManager;
 import com.yupi.springbootinit.manager.RedissonManager;
+import com.yupi.springbootinit.mapper.TableMapper;
 import com.yupi.springbootinit.model.dto.chart.ChartQueryRequest;
 import com.yupi.springbootinit.model.dto.chart.GenChartByAiRequest;
 import com.yupi.springbootinit.model.entity.Chart;
@@ -24,6 +25,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.TextHorizontalOverflow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,6 +56,10 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
     @Resource
     private MQProductor mqProductor;
 
+    @Resource
+    private TableMapper tableMapper;
+
+
 
     @Override
     public BiResponse genChart(MultipartFile multipartFile,
@@ -77,7 +83,9 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
         final List<String> validFileSuffixList = Arrays.asList("xls", "xlsx", "doc", "docx", "txt");
         ThrowUtils.throwIf(!validFileSuffixList.contains(suffix), ErrorCode.PARAMS_ERROR, "文件格式错误");
 
-        String csvData = ExcelUtils.excelToCsv(multipartFile);
+//        String csvData = ExcelUtils.excelToCsv(multipartFile);
+        List<List<String>> dataLists = ExcelUtils.excelToList(multipartFile);
+        String csvData = ExcelUtils.excelListToCsv(dataLists);
 
         //拼接用户的请求
         StringBuilder userRequest = new StringBuilder();
@@ -101,11 +109,17 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
         String genChart = splits[1].trim();
         String genResult = splits[2].trim();
 
+        String tableName = "data_" + System.currentTimeMillis();
+        tableMapper.create(tableName, dataLists.get(0));
+        dataLists.remove(0);
+        tableMapper.insert(tableName, dataLists);
+
+
         //保存生成的图表和结论
         Chart chart = new Chart();
         chart.setName(name);
         chart.setGoal(goal);
-        chart.setChartDate(csvData);
+        chart.setChartDate(tableName);
         chart.setCharType(chartType);
         chart.setUserId(loginUser.getId());
         chart.setGenChart(genChart);
@@ -145,13 +159,19 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
         final List<String> validFileSuffixList = Arrays.asList("xls", "xlsx", "doc", "docx", "txt");
         ThrowUtils.throwIf(!validFileSuffixList.contains(suffix), ErrorCode.PARAMS_ERROR, "文件格式错误");
 
-        String csvData = ExcelUtils.excelToCsv(multipartFile);
+//        String csvData = ExcelUtils.excelToCsv(multipartFile);
+        List<List<String>> dataLists = ExcelUtils.excelToList(multipartFile);
+        String csvData = ExcelUtils.excelListToCsv(dataLists);
+        String tableName = "data_" + System.currentTimeMillis();
+        tableMapper.create(tableName, dataLists.get(0));
+        dataLists.remove(0);
+        tableMapper.insert(tableName, dataLists);
 
         //保存生成的图表和结论
         Chart chart = new Chart();
         chart.setName(name);
         chart.setGoal(goal);
-        chart.setChartDate(csvData);
+        chart.setChartDate(tableName);
         chart.setCharType(chartType);
         chart.setUserId(loginUser.getId());
         chart.setStatus("wait");
