@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.springbootinit.mapper.TableMapper">
+
+    <insert id="insert">
+        insert into ${tableName}
+        values
+        <foreach collection="valueLists" item="valueList" separator=",">
+            <foreach collection="valueList" item="value" open="(" close=")" separator=",">
+                #{value}
+            </foreach>
+        </foreach>
+    </insert>
+
+    <update id="create">
+        create table if not exists ${tableName}
+        (
+            <foreach collection="columnNameList" item="columnName" separator=",">
+                ${columnName}  varchar(256) not null
+            </foreach>
+        ) collate = utf8mb4_unicode_ci;
+    </update>
+
+
+
+
+</mapper>
